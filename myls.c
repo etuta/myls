@@ -1,9 +1,9 @@
 /*
-* ls-file.c
+* myls.c
 *
 * Tenzin Dolma Gyalpo & Eliza-Teodora Tuta
 *
-* usage: ./ls-file root-directory
+* usage: ./myls root-directory
 *
 */
 

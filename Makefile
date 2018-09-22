@@ -1,6 +1,6 @@
-ls-file: ls-file.c
-	gcc -Wall -pedantic -o ls-file ls-file.c
+myls: myls.c
+	gcc -Wall -pedantic -o myls myls.c
 
 .PHONY: clean
 clean:
-	rm -f ls-file
+	rm -f myls
