@@ -1,0 +1,12 @@
+Authors:
+Tenzin Dolma Gyalpo
+Eliza-Teodora Tuta
+
+Resources:
+
+Mainly, Stack Overflow
+
+Bugs:
+
+It will currently only be able to work in the current directory and cannot
+find files from other directories.
