@@ -2,11 +2,24 @@ Authors:
 Tenzin Dolma Gyalpo
 Eliza-Teodora Tuta
 
-Resources:
+For now, our code can do the basic ls commands: displaying the files in the current
+directory and ls -l, -a, -la, -al.
+We are working on trying to find a way to store the names of all the directories
+in an array and calling it one by one, along with the options -l, -a, -la, -al
+(if they are used). Currently, we have some incomplete code commented out that we
+are working on.
 
-Mainly, Stack Overflow
 
-Bugs:
+Websites we used:
 
-It will currently only be able to work in the current directory and cannot
-find files from other directories.
+https://stackoverflow.com
+https://stackoverflow.com/questions/18318483/how-to-display-uid-size-and-files-type
+https://stackoverflow.com/questions/13554150/implementing-the-ls-al-command-in-c
+https://codereview.stackexchange.com/questions/114479/implementation-of-the-ls-command-with-several-options
+https://www.geeksforgeeks.org/permissions-in-linux/
+https://www.gnu.org/software/libc/manual/html_node/Example-of-Getopt.html
+https://www.tutorialspoint.com/c_standard_library/c_function_strncpy.htm
+https://techoverflow.net/2013/08/21/how-to-get-filesize-using-stat-in-cc/
+http://pubs.opengroup.org/onlinepubs/009604599/functions/fstat.html
+http://pubs.opengroup.org/onlinepubs/9699919799/
+https://www.ibm.com/support/knowledgecenter/en/SSLTBW_2.3.0/com.ibm.zos.v2r3.bpxbd00/rtgtpn.htm
