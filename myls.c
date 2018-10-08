@@ -3,7 +3,7 @@
 *
 * Tenzin Dolma Gyalpo & Eliza-Teodora Tuta
 *
-* usage: ./myls root-directory
+* usage: ./myls options directory/file
 *
 */
 
@@ -70,26 +70,20 @@ main(int argc, char*argv[]){
     }
     else{
       options(root, current_dir, use_a, use_l, reg_file);
-
     }
   }
   for(int i = optind; i<argc; i++){
-    //printf("this is optind %d\n", optind);
     printf("%s:\n",argv[optind]);
     current_dir = argv[optind];
     stat(current_dir, &buf);
     if(S_ISDIR(buf.st_mode)){
       root = opendir(current_dir);
-      //printf("%s \n", root);
       if(root==NULL){
         perror("opendir");
         exit(1);
       }
     }
     else{
-      printf("file path = %s\n", current_dir);
-      int fd = open(current_dir,O_RDONLY|O_CREAT,0666);
-      printf("fb = %d\n", fd);
       root = opendir(".");
       reg_file = 1;
     }
@@ -139,7 +133,6 @@ options(DIR* root,char* current_dir, int use_a,int use_l, int reg_file){
                                change the current_dir*/
   char* fileN; /*the absolute path to the directory*/
   char* fileD; /*use to change the absolute path*/
-  int count = 0; /*count the # of files/direcotry in the current_dir*/
   /*if it is file than go to file()*/
   if(reg_file==1){
     file(current_dir,root,use_l);
@@ -147,39 +140,36 @@ options(DIR* root,char* current_dir, int use_a,int use_l, int reg_file){
   }
   else{
     while((pDirent = readdir(root))!=NULL){
-    strncpy(file_name, pDirent->d_name, 256);
-    /*check the first character of the string - hidden file or not */
-    if((file_name[0]==46)){
-      /* only option 'a' was entered */
-      if(use_a==1 && use_l!=1){
-        printf ("%s \n", pDirent->d_name);
-      }
-      /*both option 'a' and 'l' was entered*/
-      else if(use_l==1 && use_a==1){
-        strcpy(new_str,current_dir);
+      strncpy(file_name, pDirent->d_name, 256);
+      /*check the first character of the string - hidden file or not */
+      if((file_name[0]==46)){
+        /* only option 'a' was entered */
+        if(use_a==1 && use_l!=1){
+          printf ("%s \n", pDirent->d_name);
+        }
+        /*both option 'a' and 'l' was entered*/
+        else if(use_l==1 && use_a==1){
+          strcpy(new_str,current_dir);
           fileD=strcat(new_str,"/");
           /*the absolute path for the directory*/
           fileN=strcat(fileD,pDirent->d_name);
           permissions(fileN,pDirent);
-      }
+        }
   }
   else{
       /*not hidden files, only entered option 'l'*/
       if(use_l==1){
         strcpy(new_str,current_dir);
-          fileD=strcat(new_str,"/");
-          fileN=strcat(fileD,pDirent->d_name);
-          permissions(fileN,pDirent);
+        fileD=strcat(new_str,"/");
+        fileN=strcat(fileD,pDirent->d_name);
+        permissions(fileN,pDirent);
       }
       /*if no option was entered*/
       else{
         printf ("%s \n", pDirent->d_name);
       }
     }
-  count++;
   }
-  /*no. of files - depends on whether 'l' or'a' was entered*/
-  printf("count %d \n", count);
   }
 }
 
