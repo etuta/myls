@@ -2,12 +2,7 @@ Authors:
 Tenzin Dolma Gyalpo
 Eliza-Teodora Tuta
 
-For now, our code can do the basic ls commands: displaying the files in the current
-directory and ls -l, -a, -la, -al.
-We are working on trying to find a way to store the names of all the directories
-in an array and calling it one by one, along with the options -l, -a, -la, -al
-(if they are used). Currently, we have some incomplete code commented out that we
-are working on.
+Our myls can program can print permissions and hidden files.
 
 
 Websites we used:
