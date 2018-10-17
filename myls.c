@@ -3,7 +3,7 @@
 *
 * Tenzin Dolma Gyalpo & Eliza-Teodora Tuta
 *
-* usage: ./myls options directory/file
+* usage: ./myls handle_options directory/file
 *
 */
 
@@ -25,18 +25,18 @@
 #include <sys/ioctl.h>
 #include <fcntl.h>
 
-//#define CURRENT_DIR "."
+//#define current_dir "."
 
 /*print permission*/
 void mode_to_letter(mode_t mode, char* str);
 /*print permission and other info for files and directories*/
-void options(DIR* root,char* CURRENT_DIR,int use_a, int use_l, int reg_file);
-void file_features(char* FileName, DIR* root, int use_l);
-void features(char* FileName, struct dirent *pDirent);
+void handle_options(DIR* root,char* current_dir,int use_a, int use_l, int reg_file);
+void processing_files(char* FileName, DIR* root, int use_l);
+void printing_features(char* FileName, struct dirent *pDirent);
 
 int
 main(int argc, char*argv[]){
-  char* CURRENT_DIR="."; /* The default current dir */
+  char* current_dir; /* it is used to take the input given in the command line */
   int use_a =0; /* to check if 'a' was written or not */
   int use_l=0; /* to check if 'l' was written or not */
   int reg_file =0; /* to check if it is a file or not*/
@@ -60,22 +60,20 @@ main(int argc, char*argv[]){
   }
 
   if(argv[optind]==NULL){
-    root = opendir(CURRENT_DIR);
+    root = opendir(".");
     if(root==NULL){
       perror("opendir");
       exit(1);
     }
-    else{
-      options(root, CURRENT_DIR, use_a, use_l, reg_file);
-    }
+    handle_options(root,".", use_a, use_l, reg_file);
   }
 
   for(int i = optind; i<argc; i++){
     printf("%s:\n",argv[optind]);
-    CURRENT_DIR = argv[optind];
-    stat(CURRENT_DIR, &buf);
+    current_dir = argv[optind];
+    stat(current_dir, &buf);
     if(S_ISDIR(buf.st_mode)){
-      root = opendir(CURRENT_DIR);
+      root = opendir(current_dir);
       if(root==NULL){
         perror("opendir");
         exit(1);
@@ -85,7 +83,7 @@ main(int argc, char*argv[]){
       root = opendir(".");
       reg_file = 1;
     }
-    options(root, CURRENT_DIR, use_a, use_l, reg_file);
+    handle_options(root, current_dir, use_a, use_l, reg_file);
     optind++;
   }
 
@@ -125,17 +123,17 @@ mode_to_letter(mode_t mode, char *str){
 }
 
 void
-options(DIR* root,char* CURRENT_DIR, int use_a,int use_l, int reg_file){
+handle_options(DIR* root,char* current_dir, int use_a,int use_l, int reg_file){
   char file_name[256]; /*check if the first character in the string is '-'*/
   struct dirent *pDirent; /*pointer to the struct*/
   char new_str[1000]; /*place in heap to store the path, to not to
-                               change the CURRENT_DIR*/
+                               change the current_dir*/
   char* fileN; /*the absolute path to the directory*/
   char* fileD; /*use to change the absolute path*/
 
   /*if it is file than go to file()*/
   if(reg_file==1){
-    file_features(CURRENT_DIR,root,use_l);
+    processing_files(current_dir,root,use_l);
     reg_file=0; /*change is back so that it can read other files/directory*/
   }
   else{
@@ -149,20 +147,20 @@ options(DIR* root,char* CURRENT_DIR, int use_a,int use_l, int reg_file){
         }
         /*both option 'a' and 'l' was entered*/
         else if(use_l==1 && use_a==1){
-          strcpy(new_str,CURRENT_DIR);
+          strcpy(new_str,current_dir);
           fileD=strcat(new_str,"/");
           /*the absolute path for the directory*/
           fileN=strcat(fileD,pDirent->d_name);
-          features(fileN,pDirent);
+          printing_features(fileN,pDirent);
         }
       }
       else{
         /*not hidden files, only entered option 'l'*/
         if(use_l==1){
-          strcpy(new_str,CURRENT_DIR);
+          strcpy(new_str,current_dir);
           fileD=strcat(new_str,"/");
           fileN=strcat(fileD,pDirent->d_name);
-          features(fileN,pDirent);
+          printing_features(fileN,pDirent);
         }
         /*if no option was entered*/
         else{
@@ -174,22 +172,22 @@ options(DIR* root,char* CURRENT_DIR, int use_a,int use_l, int reg_file){
 }
 
 void
-file_features(char* FileName, DIR *root, int use_l){
+processing_files(char* FileName, DIR *root, int use_l){
   struct dirent *pDirent;
   pDirent = readdir(root); /*initialize the struct*/
   strcpy(pDirent->d_name,FileName);
   /*entered option 'l' */
   if(use_l==1){
-    features(FileName, pDirent);
+    printing_features(FileName, pDirent);
   }
   /* if no option was entered */
   else{
-    printf ("%s \n", pDirent->d_name);
+    printf("%s \n", pDirent->d_name);
   }
 }
 
 void
-features(char* fileN, struct dirent *pDirent){
+printing_features(char* fileN, struct dirent *pDirent){
   char str[12];
   struct passwd *pwd;
   struct group *grp;
@@ -201,9 +199,9 @@ features(char* fileN, struct dirent *pDirent){
     perror("stat");
     exit(1);
   }
-  /* print features */
+  /* print printing_features */
   mode_to_letter(statbuf.st_mode,str);
-  //file type and features
+  //file type and printing_features
   printf("%s ",str);
   printf("%ld ", statbuf.st_nlink);
   /* print out owner's name */
