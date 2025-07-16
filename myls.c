@@ -1,7 +1,6 @@
 /*
 * myls.c
 *
-* Tenzin Dolma Gyalpo & Eliza-Teodora Tuta
 *
 * usage: ./myls handle_options directory/file
 *
